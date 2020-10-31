@@ -7,7 +7,8 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 Εντολή μετταγλώτισης: make
 
 Αρχεία:
- main_lsh.cpp:
+
+* main_lsh.cpp:
 Δέχεται τα ορίσματα, τα ελέγχει, δημιουργεί τις απαραίτητες δομές, υπολογίζει το W (είτε το θέτει) και κατά σειρά υπολογίζει για κάθε input data, τον true και τον LSH nearest neighbor, τον Νιοστο nearest neighbor και τους nearest neighbors σε ακτίνα R αντίστοιχα (για true και LSH) (Συγκεκριμένα offset, distance και time καθώς και τον συνολικό χρόνο γι αυτά (και true και LSH))
 
  main_cube.cpp:
