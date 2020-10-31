@@ -14,27 +14,27 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 * main_cube.cpp:
 Ακριβώς την ίδια διαδικασία, με τη μεθοδολογία του hypercube αντί για την LSH.
 
- *helpers.cpp & .h:
+ * helpers.cpp & .h:
 Υλοποίηση βοηθητικών συναρτήσεων και συγκεκριμένα my_random (random double αριθμός), modulo, exp_modulo και hammilton distance.
 
- *ImageData.cpp & h:
+ * ImageData.cpp & h:
 Υλοποίηση της βασικής δομής των διανυσμάτων εικόνων που χρησιμοποιούμε (της κλάσης που χρειάζεται και των συναρτήσεων print και manhattan που αφορόυν εκτυπωση των bytes του διανύσματος και υπολογισμό manhattan distance αντίστοιχα.
 
- *ImageHashTable.cpp & h:
+ * ImageHashTable.cpp & h:
 Υλοποίηση της δομής των hastables για την αποθήκευση των επεξεργασμένων διανυσμάτων αντίστοιχα για LSH ή hypercube (ανάλογα με τον selector) το καθένα σύμφωνα με τη μεθοδολογία του (αντίστοιχες ολισθήσεις κτλ)
-
-*RandomVector.cpp & h:
+ 
+* RandomVector.cpp & h:
 Υλοποίηση ενός vector ώστε να αξιοποιηθεί στα hashtables (κλάση και συνάρτηση fill που επί της ουσίας κάνει pushback)
 
- *ImageDataArray.cpp & h:
+ * ImageDataArray.cpp & h:
 
 
- *Clustering.cpp & h:
+ * Clustering.cpp & h:
 
 
-*ResultNN.h:*
+* ResultNN.h:*
 Η δομή για την επιστροφή αποτελεσμάτων nearest neighbor.Περιλαμβάνει imagedata, τη θέση offset(int), την απόσταση distance (double) και τον χρόνο t 
 
- *comparator.h:
+ * comparator.h:
 Δέχεται 2 structs τύπου ResultNN ki eπιστρέφει τη σύγκριση των 2 μεταξύ τους distances
 
