@@ -37,19 +37,12 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 
  * Clustering.cpp & h:
 Υλοποίηση όλων των βασικών συναρτήσεων για το clustering.
-
 Initialization: αρχική επιλογή centroids. Του πρώτου εντελώς τυχαία και των υπολοίπων με βάση το τυχαίο r αφού υπολογίσουμε τις αποστάσεις όλων των inputdata από το centroid.
-
 AssignmentClassic: Κάνει assign τα Input data σε centroids με βάση τη manhattan distance τους από το κάθε centroid (το centroid με τη μικρότερη manh. dist. από κάθε input data ανατείθεται σε αυτό)
-
 AssignmentLSH: Κάνει assign τα Input data σε centroids με βάση τη μεθοδολογία LSH και ακτίνα R, η οποία διπλασιάζεται κάθε φορά σε κάθε επανάληψη. Τα Input data, γίνονται assign σε κάθε centroid την πρώτη φορά που ανακαλύπτονται, δεν συμβαίνει τίποτα εάν έχουν ήδη γίνει assign στο centroid που τα βρίσκει στη συγκεκριμένη επανάληψη, ή εάν έχει ανακαλυφθεί από άλλο centroid σε προηγούμενη επανάληψη πάλι δε συμβαίνει τίποτα μιας και από το άλλο centroid θα απέχουν σίγουρα μικρότερη απόσταση (αφού βρέθηκε με μικρότερη ακτίνα R).
-
 AssignmentHypercube: Ακριβώς η ίδια διαδικασία με τη μεθοδολογία και το hashing του Hypercube αυτή τη φορά.
-
 Update: Κάνει update τα centroids κάθε cluster σε καλύτερα, σύμφωνα με τη μεθοδολογία του median σε κάθε cluster, κάνει έλεγχο για το μέγεθος των διαστάσεων κι επιστρέφει τα νέα centroids.
-
 Silhouette:
-
 Visualize:
 
 * ResultNN.h:*
