@@ -50,5 +50,5 @@ Visualize: Τυπώνει για κάθε cluster, αν του έχει γίνε
 Η δομή για την επιστροφή αποτελεσμάτων nearest neighbor.Περιλαμβάνει imagedata, τη θέση offset(int), την απόσταση distance (double) και τον χρόνο t 
 
  * comparator.h:
-Δέχεται 2 structs τύπου ResultNN ki eπιστρέφει τη σύγκριση των 2 μεταξύ τους distances
+Δέχεται 2 structs τύπου ResultNN κι eπιστρέφει τη σύγκριση των 2 μεταξύ τους distances
 
