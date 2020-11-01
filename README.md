@@ -4,7 +4,7 @@ Panagiotis Nikolopoulos AM:1115201400128 email: sdi1400128@di.uoa.gr
 
 Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 
-Εντολή μετταγλώτισης: make
+Εντολή μετταγλώτισης: make ή make all 
 
 Αρχεία:
 
@@ -15,7 +15,9 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 Ακριβώς την ίδια διαδικασία, με τη μεθοδολογία του hypercube αντί για την LSH.
 
 * main_clustering.cpp:
+Δέχεται τα ορίσματα, τα ελέγχει, δημιουργεί τις απαραίτητες δομές,δέχεται μέσω του ορίσματος selector εάν θα τρέξει η διαδικασία Lsh, Hypercube ή Classic (0,1,2) και στη συνέχεια κάνει initialize τα centroids. Κάνει assign τα input data στα centroid σύμφωνα με την επιλεγμένη μεθοδολογία, κάνει update τα centroids στα modified δεδομένα (δηλαδή μετά τα assign), κάνει visualize για κάθε περίπτωση σε επανάληψη 15 φορές. Στο τέλος τρέχει Silhouette για τα τελικά modified δεδομένα αλλά και visualize συνολικά. Παράλληλα χρονομετρεί την όλη διαδικασία.
 
+Όλες οι main κάνουν σωστή διαχείριση μνήμης με τα απαραίτητα new και delete στις δομές που αξιοποιούν. 
 
  * helpers.cpp & .h:
 Υλοποίηση βοηθητικών συναρτήσεων και συγκεκριμένα my_random (random double αριθμός), modulo, exp_modulo και hammilton distance.
@@ -36,12 +38,12 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
  * Clustering.cpp & h:
 Υλοποίηση όλων των βασικών συναρτήσεων για το clustering. 
 Initialization: αρχική επιλογή centroids. Του πρώτου εντελώς τυχαία και των υπολοίπων με βάση το τυχαίο r αφού υπολογίσουμε τις αποστάσεις όλων των inputdata από το centroid.
-AssignmentClassic:
-AssignmentLSH:
-AssignmentCube:
-Update:
+AssignmentClassic: Κάνει assign τα Input data σε centroids με βάση τη manhattan distance τους από το κάθε centroid (το centroid με τη μικρότερη manh. dist. από κάθε input data ανατείθεται σε αυτό)
+AssignmentLSH: Κάνει assign τα Input data σε centroids με βάση τη μεθοδολογία LSH και ακτίνα R, η οποία διπλασιάζεται κάθε φορά σε κάθε επανάληψη. Τα Input data, γίνονται assign σε κάθε centroid την πρώτη φορά που ανακαλύπτονται, δεν συμβαίνει τίποτα εάν έχουν ήδη γίνει assign στο centroid που τα βρίσκει στη συγκεκριμένη επανάληψη, ή εάν έχει ανακαλυφθεί από άλλο centroid σε προηγούμενη επανάληψη πάλι δε συμβαίνει τίποτα μιας και από το άλλο centroid θα απέχουν σίγουρα μικρότερη απόσταση (αφού βρέθηκε με μικρότερη ακτίνα R).
+AssignmentHypercube: Ακριβώς η ίδια διαδικασία με τη μεθοδολογία και το hashing του Hypercube αυτή τη φορά.
+Update: Κάνει update τα centroids κάθε cluster σε καλύτερα, σύμφωνα με τη μεθοδολογία του median σε κάθε cluster, κάνει έλεγχο για το μέγεθος των διαστάσεων κι επιστρέφει τα νέα centroids.
 Silhouette:
-Visualization:
+Visualize:
 
 * ResultNN.h:*
 Η δομή για την επιστροφή αποτελεσμάτων nearest neighbor.Περιλαμβάνει imagedata, τη θέση offset(int), την απόσταση distance (double) και τον χρόνο t 
