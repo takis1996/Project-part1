@@ -7,6 +7,7 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 Εντολή μετταγλώτισης: make ή make all 
 
 Εντολές χρήσης του προγράμματος: 
+
 *LSH:        "${OUTPUT_PATH}" -selector 0 -d train-images.idx3-ubyte -q t10k-images.idx3-ubyte -k 3 -L 4 -o output.txt -N 5 -R 5000
 
 *Hypercube:  "${OUTPUT_PATH}" -selector 0 -d train-images.idx3-ubyte -q t10k-images.idx3-ubyte -k 3 -L 4 -o output.txt -N 5 -R 5000
