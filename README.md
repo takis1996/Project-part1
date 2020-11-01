@@ -14,6 +14,9 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 * main_cube.cpp:
 Ακριβώς την ίδια διαδικασία, με τη μεθοδολογία του hypercube αντί για την LSH.
 
+* main_clustering.cpp:
+
+
  * helpers.cpp & .h:
 Υλοποίηση βοηθητικών συναρτήσεων και συγκεκριμένα my_random (random double αριθμός), modulo, exp_modulo και hammilton distance.
 
@@ -31,7 +34,14 @@ Politimi Marioli AM:1115201400098 email: sdi1400098@di.uoa.gr
 Άνοιγμα των αρχείων και κατάλληλη αποθήκευση των δεδομένων, υλοποίηση nearest neighbor (και οι 3 περιπτώσεις), υλοποίηση της calculateW και της distance που αξιοποιείται στο clustering για την απόσταση 2 διανυσμάτων εικόνων.
 
  * Clustering.cpp & h:
-
+Υλοποίηση όλων των βασικών συναρτήσεων για το clustering. 
+Initialization: αρχική επιλογή centroids. Του πρώτου εντελώς τυχαία και των υπολοίπων με βάση το τυχαίο r αφού υπολογίσουμε τις αποστάσεις όλων των inputdata από το centroid.
+AssignmentClassic:
+AssignmentLSH:
+AssignmentCube:
+Update:
+Silhouette:
+Visualization:
 
 * ResultNN.h:*
 Η δομή για την επιστροφή αποτελεσμάτων nearest neighbor.Περιλαμβάνει imagedata, τη θέση offset(int), την απόσταση distance (double) και τον χρόνο t 
