@@ -19,6 +19,7 @@
 
 using namespace std;
 
+// "${OUTPUT_PATH}" -i t10k-images.idx3-ubyte -o output.txt -c clustering.conf -complete -m Classic
 
 int main(int argc, char** argv) {
     int L = 1;
@@ -190,9 +191,6 @@ int main(int argc, char** argv) {
         for (int i = 0; i < inputData->size; i++) { // training
             for (unordered_set<ImageHashTable * >::iterator it = hashtables.begin(); it != hashtables.end(); ++it) {
                 ImageHashTable * ht = *it;
-                if ((i % 2000) == 0) {
-                    cout << "i = " << i << endl;
-                }
                 ht->insert(&inputData->array[i], i);
             }
         }
@@ -243,7 +241,7 @@ int main(int argc, char** argv) {
 
         cout << "Loop: " << loops++ << " - avg dist: " << dist << endl;
 
-        if (dist < 10000) {
+        if (dist < 1000) {
             break;
         } else {
             initialCentroids = modifiedCentroids;
@@ -279,8 +277,8 @@ int main(int argc, char** argv) {
     cout << "Calculating silhouette ... " << endl;
 
 
-//    double * s = Silhouette(inputData, initialCentroids, assignments);
-    double * s = NULL;
+    double * s = Silhouette(inputData, initialCentroids, assignments);
+//    double * s = NULL;
 
     if (s) {
         cout << "Clustering time: " << t << endl;

@@ -204,12 +204,6 @@ int main(int argc, char** argv) {
             std::sort(cube_result2s.begin(), cube_result2s.end(), comparator());
 
             for (unsigned i = 1; i < (unsigned) N; i++) {
-                if (i < true_result2.size()) {
-                    cout << "True Nearest neighbor-" << i << ": " << true_result2[i].offset << endl;
-                    cout << "distanceTrue      : " << true_result2[i].distance << endl;
-//                    cout << "Time    True      : " << true_result2[i].t << "ms" << endl;
-                }
-
                 if (i < cube_result2s.size()) {
                     ResultNN cube_result2;
                     cube_result2.distance = cube_result2s[i].distance;
@@ -221,10 +215,21 @@ int main(int argc, char** argv) {
                     cout << "distanceLSH      : " << cube_result2.distance << endl;
 //                    cout << "Time    LSH      : " << lsh_result2.t << "ms" << endl;
                 }
+                
+                if (i < true_result2.size()) {
+//                    cout << "True Nearest neighbor-" << i << ": " << true_result2[i].offset << endl;
+                    cout << "distanceTrue      : " << true_result2[i].distance << endl;
+//                    cout << "Time    True      : " << true_result2[i].t << "ms" << endl;
+                }
+
             }
 
         }
 
+        cout << "Total time true: " << t << "ms" << endl;
+        cout << "Total time CUBE: " << t_lsh << "ms" << endl;
+        
+        cout << "Range search ... \n";
         // R
         if (R != 0) {
             // ***************************** TRUE NN (R) *****************************/ 
@@ -253,9 +258,8 @@ int main(int argc, char** argv) {
                 cout << offset << endl;
             }
         }
-
-        cout << "Total time true: " << t << "ms" << endl;
-        cout << "Total time CUBE: " << t_lsh << "ms" << endl;
+        
+        cout << "Range search ... ended\n";
     }
 
     for (unordered_set<ImageHashTable * >::iterator it = hashtables.begin(); it != hashtables.end(); ++it) {

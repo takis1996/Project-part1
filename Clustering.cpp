@@ -69,10 +69,10 @@ ImageDataArray * Initialization(ImageDataArray * inputData, int clusters) {
 
 ImagePointerArray ** AssignmentClassic(ImageDataArray * inputData, ImageDataArray * centroids) {
     ImagePointerArray ** clusters = new ImagePointerArray *[centroids->size];
-    
+
     cout << " ==> Assignment classic with clusters " << centroids->size << " \n";
     for (int i = 0; i < centroids->size; i++) {
-        clusters[i] = new ImagePointerArray();        
+        clusters[i] = new ImagePointerArray();
     }
 
     for (int j = 0; j < inputData->size; j++) {
@@ -103,7 +103,7 @@ ImagePointerArray ** AssignmentLSH(unordered_set<ImageHashTable * > & hashtables
     ImagePointerArray ** clusters = new ImagePointerArray *[centroids->size];
 
     cout << " ==> Assignment LSH ... \n";
-    
+
     for (int i = 0; i < centroids->size; i++) {
         clusters[i] = new ImagePointerArray();
     }
@@ -196,7 +196,7 @@ ImagePointerArray ** AssignmentHypercube(unordered_set<ImageHashTable * > & hash
     ImagePointerArray ** clusters = new ImagePointerArray *[centroids->size];
 
     cout << " ==> Assignment Cube ... \n";
-    
+
     for (int i = 0; i < centroids->size; i++) {
         clusters[i] = new ImagePointerArray();
     }
@@ -296,7 +296,7 @@ ImageDataArray * Update(ImageDataArray * inputData, ImageDataArray * previousCen
         unsigned d = previousCentroids->array[idCluster].bytes.size();
 
         vector<int> temp[d];
-        
+
         centroids->array[idCluster].rows = previousCentroids->array[0].rows;
         centroids->array[idCluster].cols = previousCentroids->array[0].cols;
         centroids->array[idCluster].cluster_id = idCluster;
@@ -306,10 +306,8 @@ ImageDataArray * Update(ImageDataArray * inputData, ImageDataArray * previousCen
             for (int idPoint = 0; idPoint < N; idPoint++) {
                 std::vector<int> &myvector = temp[idDimension];
                 int myvalue = assignments[idCluster]->points[idPoint]->bytes[idDimension];
-                
-                if (find(myvector.begin(), myvector.end(), myvalue) == myvector.end()) {
-                    myvector.push_back(myvalue);
-                }
+
+                myvector.push_back(myvalue);
             }
         }
 
@@ -328,7 +326,7 @@ ImageDataArray * Update(ImageDataArray * inputData, ImageDataArray * previousCen
                 centroids->array[idCluster].bytes.push_back(0);
             }
         }
-        
+
         if (centroids->array[idCluster].bytes.size() != d) {
             cout << "corrupted dimensions \n";
             exit(2);
@@ -346,20 +344,10 @@ double * Silhouette(ImageDataArray * inputData, ImageDataArray * centroids, Imag
 
     for (int c = 0; c < centroids->size; c++) {
         silhouettes[c] = 0.0;
-        
-        for (unsigned j = 0; j < assignments[c]->points.size(); j++) {
-            double mindist = DBL_MAX;
-            int nearest_k = 0;
 
+        for (unsigned j1 = 0; j1 < assignments[c]->points.size(); j1++) {
             // nearest
-            for (int k = 0; k < centroids->size; k++) {
-                double dist = manhattan(&inputData->array[j], &centroids->array[k]);
-
-                if (dist < mindist) {
-                    mindist = dist;
-                    nearest_k = k;
-                }
-            }
+            int nearest_k = c;
 
             // second nearest
             double mindist_2 = DBL_MAX;
@@ -367,7 +355,7 @@ double * Silhouette(ImageDataArray * inputData, ImageDataArray * centroids, Imag
 
             for (int k = 0; k < centroids->size; k++) {
                 if (k != nearest_k) {
-                    double dist = manhattan(&inputData->array[j], &centroids->array[k]);
+                    double dist = manhattan(&inputData->array[j1], &centroids->array[k]);
 
                     if (dist < mindist_2) {
                         mindist_2 = dist;
@@ -378,31 +366,36 @@ double * Silhouette(ImageDataArray * inputData, ImageDataArray * centroids, Imag
 
             double bi = 0, ai = 0;
 
-            for (unsigned j = 0; j < assignments[nearest_k]->points.size(); j++) {
-                bi = bi + manhattan(&inputData->array[j], &centroids->array[nearest_k]);
+            for (unsigned ja = 0; ja < assignments[nearest_k]->points.size(); ja++) {
+                if (j1 != ja) {
+                    ai = ai + manhattan(assignments[nearest_k]->points[ja], assignments[nearest_k]->points[j1]);
+                }
             }
 
-            bi = bi / assignments[nearest_k]->points.size();
+            ai = ai / (assignments[nearest_k]->points.size() - 1);
 
 
-            for (unsigned j = 0; j < assignments[second_nearest_k]->points.size(); j++) {
-                ai = ai + manhattan(&inputData->array[j], &centroids->array[second_nearest_k]);
+            for (unsigned jb = 0; jb < assignments[second_nearest_k]->points.size(); jb++) {
+                bi = bi + manhattan(assignments[second_nearest_k]->points[jb], assignments[nearest_k]->points[j1]);
             }
 
-            ai = ai / assignments[second_nearest_k]->points.size();
+            bi = bi / assignments[second_nearest_k]->points.size();            
 
-            value = value + (bi - ai) / max(bi, ai);
-
-            silhouettes[c] = silhouettes[c] + value;
+            silhouettes[c] = silhouettes[c] + (bi - ai) / max(bi, ai);
         }
 
-        silhouettes[c] = silhouettes[c] / assignments[c]->points.size();
+        if ( assignments[c]->points.size() > 0) {
+            silhouettes[c] = silhouettes[c] / assignments[c]->points.size();
+        }
     }
 
-    value = value / inputData->size;
+    for (int c = 0; c < centroids->size; c++) {
+        value += silhouettes[c];
+    }
+    
+    value = value / centroids->size;
 
-
-    silhouettes[inputData->size] = value;
+    silhouettes[centroids->size] = value;
 
     return silhouettes;
 }
@@ -427,7 +420,7 @@ void Visualize(ImageDataArray * inputData, ImageDataArray * centroids, ImagePoin
     if (complete && assignments != NULL) {
         for (int i = 0; i < C; i++) {
             cout << "Cluster: #" << i << ": { size: " << centroids->array[i].bytes.size() << ", items: " << endl;
-            
+
             int N = assignments[i]->points.size();
 
             for (int j = 0; j < N; j++) {

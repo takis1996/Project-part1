@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
     ImageDataArray * inputData = load(input_filename);
     ImageDataArray * queryData = load(query_filename);
 
-    int numOfLists = inputData->size / 2;
+    int numOfLists = inputData->size / 4;
     d = inputData->array->cols * inputData->array->rows;
 
     for (int i = 0; i < L; i++) {
@@ -138,6 +138,11 @@ int main(int argc, char** argv) {
         hashtables.insert(p);
     }
 
+    //    double W1 = W;
+    //    cout << "W1 = " << W1 << endl;
+    //
+    //    double W2 = calculateW(queryData);
+    //    cout << "W2 = " << W2 << endl;
 
     cout << "Inserting to hashtables ... \n";
 
@@ -188,7 +193,7 @@ int main(int argc, char** argv) {
             // ***************************** TRUE NN (Nth) *****************************/ 
             vector<ResultNN> true_result2 = nearestNeighbor(q, inputData, N);
 
-            t += true_result2[true_result2.size()-1].t;
+            t += true_result2[true_result2.size() - 1].t;
 
             // ***************************** LSH NN (Nth) *****************************/ 
             vector<ResultNN> lsh_result2s;
@@ -200,12 +205,6 @@ int main(int argc, char** argv) {
             std::sort(lsh_result2s.begin(), lsh_result2s.end(), comparator());
 
             for (unsigned i = 1; i < (unsigned) N; i++) {
-                if (i < true_result2.size()) {
-                    cout << "True Nearest neighbor-" << (i+1) <<  ": " << true_result2[i].offset << endl;
-                    cout << "distanceTrue      : " << true_result2[i].distance << endl;
-//                    cout << "Time    True      : " << true_result2[i].t << "ms" << endl;
-                }
-                
                 if (i < lsh_result2s.size()) {
                     ResultNN lsh_result2;
                     lsh_result2.distance = lsh_result2s[i].distance;
@@ -213,19 +212,29 @@ int main(int argc, char** argv) {
                     lsh_result2.nn = lsh_result2s[i].nn;
                     lsh_result2.t = t_lsh;
 
-                    cout << "LSH Nearest neighbor-" << (i+1) << ": " << lsh_result2.offset << endl;
+                    cout << "LSH Nearest neighbor-" << (i + 1) << ": " << lsh_result2.offset << endl;
                     cout << "distanceLSH      : " << lsh_result2.distance << endl;
-//                    cout << "Time    LSH      : " << lsh_result2.t << "ms" << endl;
+                    //                    cout << "Time    LSH      : " << lsh_result2.t << "ms" << endl;
+                }
+
+                if (i < true_result2.size()) {
+                    //                    cout << "True Nearest neighbor-" << (i+1) <<  ": " << true_result2[i].offset << endl;
+                    cout << "distanceTrue      : " << true_result2[i].distance << endl;
+                    //                    cout << "Time    True      : " << true_result2[i].t << "ms" << endl;
                 }
             }
         }
+
+        cout << "Total time true: " << t << "ms" << endl;
+        cout << "Total time lsh : " << t_lsh << "ms" << endl;
+//        cout << "Ratio          : " << t / t_lsh << " ms" << endl;
 
         // R
         if (R != 0) {
             // ***************************** TRUE NN (R) *****************************/ 
             vector<ResultNN> true_result3 = nearestNeighbor(q, inputData, R);
             //            cout << "R        neighbors: " << true_result3.size() - 1 << endl;
-            cout << "Time    True      : " << true_result3[0].t << "ms" << endl;
+            //            cout << "Time    True      : " << true_result3[0].t << "ms" << endl;
 
             for (unsigned i = 1; i < true_result3.size(); i++) {
                 cout << true_result3[i].offset << " " << true_result3[i].distance << endl;
@@ -241,7 +250,7 @@ int main(int argc, char** argv) {
                 t_lsh += ht->search(q, &lsh_result3, R);
             }
 
-            cout << "Time    LSH       : " << t_lsh << "ms" << endl;
+            //            cout << "Time    LSH       : " << t_lsh << "ms" << endl;
             cout << "R        neighbors: " << lsh_result3.size() << endl;
 
             for (auto offset : lsh_result3) {
@@ -249,9 +258,6 @@ int main(int argc, char** argv) {
             }
             cout << endl;
         }
-
-        cout << "Total time true: " << t << "ms" << endl;
-        cout << "Total time lsh : " << t_lsh << "ms" << endl;
     }
 
     for (unordered_set<ImageHashTable * >::iterator it = hashtables.begin(); it != hashtables.end(); ++it) {

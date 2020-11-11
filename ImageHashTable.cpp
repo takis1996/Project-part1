@@ -10,6 +10,16 @@
 
 using namespace std;
 
+// TODO:
+
+//vector<int> findnumbers(int x, int hammingdistance, int bits) {
+//    //
+//}
+
+// findnumbers(010, 0, 3) = { 010 }
+// findnumbers(010, 1, 3) = { 110 000 011 }
+// findnumbers(0000, 1, 4) = { 1000 0100 0010 0001 }
+
 ImageHashTable::ImageHashTable(int selector, int numOfLists, int k, int d, double W) {
     this->numOfLists = numOfLists;
     this->k = k;
@@ -68,28 +78,42 @@ void ImageHashTable::insert(ImageData * imagedata, int offset) {
     ipwg.pointer = imagedata;
     ipwg.g = g;
     ipwg.offset = offset;
+
+    //    cout << g % numOfLists << endl;
+    //        cout << g  % numOfLists << endl;
     hashlists[g % numOfLists].push_back(ipwg);
 }
 
 unsigned ImageHashTable::h(ImageData * x, RandomVector * s) {
+    static bool firstrun = false;
+    static unsigned * mi_mod = nullptr;
     unsigned sum = 0;
 
-    for (unsigned i = 0; i < s->components.size(); i++) {
-        unsigned ai = (int) floor((x->bytes[i] - s->components[i]) / W);
-        unsigned ai_mod = modulo(ai, M);
-        unsigned mi_mod = exp_modulo(m, i, M);
+    if (firstrun == false) {
+        //        cout << "Initialize: mi_mod " << endl;
+        firstrun = true;
+        mi_mod = new unsigned[ s->components.size()];
 
-        unsigned prod = (ai_mod * mi_mod) % M;
+        for (unsigned i = 0; i < s->components.size(); i++) { // i = 0 ... 254
+            mi_mod[i] = exp_modulo(m, i, M);
+        }
+    }
+
+    for (unsigned i = 0; i < s->components.size(); i++) { // i = 0 ... 254
+        unsigned ai = (int) floor((x->bytes[i] - s->components[i]) / W);
+        unsigned ai_mod = moduloPowerOf2(ai, M);
+
+        unsigned prod = moduloPowerOf2((ai_mod * mi_mod[i]), M);
 
         sum = sum + prod;
     }
 
-    unsigned res = sum % M;
+    unsigned res = moduloPowerOf2(sum, M);
 
     return res;
 }
 
-ResultNN ImageHashTable::search(ImageData * q, int limitnode, int limitchains) { 
+ResultNN ImageHashTable::search(ImageData * q, int limitnode, int limitchains) {
     // Nearest neighbor
     unsigned g = 0;
 
@@ -121,9 +145,9 @@ ResultNN ImageHashTable::search(ImageData * q, int limitnode, int limitchains) {
             }
         }
     } else if (selector == 1) { // CUBE
-        while (limitnode > 0 && limitchains > 0) {
-            unsigned hd = 0;
+        unsigned hd = 0;
 
+        while (limitnode > 0 && limitchains > 0 && hd < (unsigned) k) {
             for (int i = 0; i < numOfLists; i++) {
                 int chain = i;
 
@@ -138,10 +162,9 @@ ResultNN ImageHashTable::search(ImageData * q, int limitnode, int limitchains) {
                                 dist_nn = dist;
                                 result.nn = ipwg.pointer;
                                 result.offset = ipwg.offset;
-                                limitnode--;
                             }
-
                         }
+                        limitnode--;
                     }
                     limitchains--;
                 }
@@ -192,9 +215,9 @@ double ImageHashTable::search(ImageData * q, set<int> * results, double R, int l
             cache[h].push_back(chain);
         }
 
-        while (limitnode > 0 && limitchains > 0) {
-            int hd = 0;
+        unsigned hd = 0;
 
+        while (limitnode > 0 && limitchains > 0 && hd < (unsigned) k) {
             for (auto chain : cache[hd]) {
                 for (list<ImagePointerWithG>::iterator it = hashlists[chain].begin(); it != hashlists[chain].end(); ++it) {
                     ImagePointerWithG & ipwg = *it;
@@ -205,6 +228,7 @@ double ImageHashTable::search(ImageData * q, set<int> * results, double R, int l
                             results->insert(ipwg.offset);
                         }
                     }
+                    limitnode--;
                 }
                 limitchains--;
                 if (limitnode <= 0 || limitchains <= 0) {
@@ -213,10 +237,6 @@ double ImageHashTable::search(ImageData * q, set<int> * results, double R, int l
             }
 
             hd++;
-
-            if (hd > k) {
-                break;
-            }
         }
     }
 
@@ -260,9 +280,9 @@ double ImageHashTable::search(ImageData * q, vector<ResultNN> * results, int N, 
             cache[h].push_back(chain);
         }
 
-        while (limitnode > 0 && limitchains > 0) {
-            int hd = 0;
+        unsigned hd = 0;
 
+        while (limitnode > 0 && limitchains > 0 && hd < (unsigned) k) {
             for (auto chain : cache[hd]) {
                 for (list<ImagePointerWithG>::iterator it = hashlists[chain].begin(); it != hashlists[chain].end(); ++it) {
                     ImagePointerWithG & ipwg = *it;
@@ -277,19 +297,17 @@ double ImageHashTable::search(ImageData * q, vector<ResultNN> * results, int N, 
 
                         results->push_back(result);
                     }
+
+                    limitnode--;
                 }
                 limitchains--;
-                
+
                 if (limitnode <= 0 || limitchains <= 0) {
                     break;
                 }
             }
 
             hd++;
-
-            if (hd > k) {
-                break;
-            }
         }
     }
 

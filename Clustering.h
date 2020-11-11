@@ -24,5 +24,10 @@ double * Silhouette(ImageDataArray * inputData, ImageDataArray * centroids, Imag
 void Visualize(ImageDataArray * inputData, ImageDataArray * centroids, ImagePointerArray ** assignments, bool complete = false);
 
 
+// TODO:
+
+// 1) silhouette
+// 2) cube
+// 3) debugging
 #endif /* CLUSTERING_H */
 

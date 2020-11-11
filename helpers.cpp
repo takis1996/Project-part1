@@ -19,6 +19,10 @@ unsigned modulo(int a, int b) {
     }
 }
 
+unsigned moduloPowerOf2(int a, int b) {
+    return a & (b - 1);
+}
+
 unsigned exp_modulo(int base, int exponent, int modulus) {
     // https://en.wikipedia.org/wiki/Modular_exponentiation
     if (modulus == 1) {
